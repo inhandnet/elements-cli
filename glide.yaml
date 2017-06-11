@@ -1,0 +1,5 @@
+package: github.com/inhandnet/elements-cli
+import:
+- package: gopkg.in/mgo.v2
+- package: github.com/Sirupsen/logrus
+  version: v1.0.0

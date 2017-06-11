@@ -1,0 +1,19 @@
+hash: 5f01a0842f4604d4ecd457d8452539d79effda92212e85a833c7bb23bf3be4b8
+updated: 2017-06-12T00:02:26.487051441+08:00
+imports:
+- name: github.com/codegangsta/cli
+  version: bf4a526f48af7badd25d2cb02d587e1b01be3b50
+- name: github.com/Sirupsen/logrus
+  version: 202f25545ea4cf9b191ff7f846df5d87c9382c2b
+- name: golang.org/x/sys
+  version: 8d1157a435470616f975ff9bb013bea8d0962067
+  subpackages:
+  - unix
+- name: gopkg.in/mgo.v2
+  version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
+  subpackages:
+  - bson
+  - internal/json
+  - internal/sasl
+  - internal/scram
+testImports: []
