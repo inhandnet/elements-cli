@@ -4,11 +4,12 @@ elements scripts or utility or some other clients.
 
 ### Quick start
 
-Install go and set `GOPATH` and `$PATH=$PATH:$GOPATH/bin`, then run 
+1. Install go and set `GOPATH` and `$PATH=$PATH:$GOPATH/bin`
+2. get package
 ```shell
 go get github.com/inhandnet/elements-cli
 ```
-the client could run from `elements-cli help`  
+3. try `elements-cli help`  
 ```shell
 NAME:
    elements util - elements scripts utility.
