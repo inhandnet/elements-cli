@@ -25,7 +25,7 @@ func MigrateDeviceOnlineEvents(c *cli.Context) {
 	for iter.Next(org) {
 		db := org.DbName()
 		logrus.Infoln("Running in", db)
-		migrate(db)
+		migrate(db, retain)
 	}
 
 }
@@ -46,7 +46,7 @@ func (o *Org) DbName() string {
 	return strings.ToUpper(hex) + "_db"
 }
 
-func migrate(db string) {
+func migrate(db string, retain bool) {
 	conn := sess.Copy()
 	defer conn.Close()
 	coll := conn.DB(db).C("device.online.events")
@@ -99,6 +99,9 @@ func migrate(db string) {
 	}
 	if _, err := bulk.Run(); err != nil {
 		logrus.Fatalln(err)
+	}
+	if !retain {
+		oldc.DropCollection()
 	}
 }
 

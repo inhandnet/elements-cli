@@ -29,6 +29,10 @@ func NewApp() *cli.App {
 							Value: "mongodb://admin:admin@localhost:27017/",
 							Usage: "mongodb connect uri",
 						},
+						cli.BoolFlag{
+							Name: "retain",
+							Usage: "retain collection device_online_stat after migrate, default it will be dropped",
+						},
 					},
 					Action: fix.MigrateDeviceOnlineEvents,
 				},
