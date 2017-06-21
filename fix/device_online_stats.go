@@ -25,7 +25,7 @@ func MigrateDeviceOnlineEvents(c *cli.Context) {
 	for iter.Next(org) {
 		db := org.DbName()
 		logrus.Infoln("Running in", db)
-		migrate(db, retain)
+		migrate(db, c.Bool("retain"))
 	}
 
 }
