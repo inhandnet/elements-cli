@@ -51,9 +51,14 @@ func migrate(db string, retain bool) {
 	defer conn.Close()
 	coll := conn.DB(db).C("device.online.events")
 
+	coll.DropIndex("time", "deviceId")
 	coll.EnsureIndex(mgo.Index{
 		Background: true,
-		Key:        []string{"time", "deviceId"},
+		Key:        []string{"time"},
+	})
+	coll.EnsureIndex(mgo.Index{
+		Background: true,
+		Key:        []string{"deviceId"},
 	})
 
 	oldc := conn.DB(db).C("device_online_stat")
