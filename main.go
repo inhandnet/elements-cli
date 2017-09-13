@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/inhandnet/elements-cli/device"
 	"github.com/inhandnet/elements-cli/fix"
 	"github.com/inhandnet/elements-cli/log"
 	"github.com/urfave/cli"
@@ -12,6 +11,7 @@ import (
 	"github.com/jeffail/tunny"
 	"sync"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/inhandnet/elements-cli/client"
 )
 
 func main() {
@@ -76,7 +76,7 @@ func NewApp() *cli.App {
 				{
 					Name:   "delete",
 					Usage:  "delete device",
-					Before: device.Prepare,
+					Before: client.Prepare,
 					Flags: []cli.Flag{
 						cli.StringFlag{
 							Name:  "serialNumber, s",
@@ -98,9 +98,8 @@ func NewApp() *cli.App {
 					},
 					Action: func(c *cli.Context) {
 						serialNumber := c.String("serialNumber")
-						device.Prepare(c)
 
-						list := device.Find(serialNumber, c.String("email"))
+						list := mongo.FindDevice(serialNumber, c.String("email"))
 						if len(list) == 0 {
 							logrus.Fatalln("device not found")
 						}
@@ -112,7 +111,7 @@ func NewApp() *cli.App {
 							id := util.ObjectIdStr(d["deviceId"])
 							oid := util.ObjectIdStr(d["oid"])
 							logrus.Infoln("Deleting", d["sn"], "in", oid)
-							if err := device.Delete(oid, id, c.Bool("delete-site")); err != nil {
+							if err := client.DeleteDevice(oid, id, c.Bool("delete-site")); err != nil {
 								logrus.Fatalln(err.Error())
 							}
 
@@ -145,7 +144,84 @@ func NewApp() *cli.App {
 					Action: func(c *cli.Context) {
 						serialNumber := c.String("serialNumber")
 
-						d := device.Find(serialNumber, c.String("email"))
+						d := mongo.FindDevice(serialNumber, c.String("email"))
+						if d == nil {
+							logrus.Fatalln("device not found")
+						}
+
+						log.PrintJSON(d)
+					},
+				},
+			},
+		},
+		{
+			Name:  "site",
+			Usage: "site management",
+			Subcommands: []cli.Command{
+				{
+					Name:   "delete",
+					Usage:  "search and delete sites",
+					Before: client.Prepare,
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:  "name, n",
+							Usage: "site name, use /abc/ to search regex",
+						},
+						cli.IntFlag{
+							Name:  "pool",
+							Usage: "worker pool size",
+							Value: 1,
+						},
+						cli.StringFlag{
+							Name:  "email",
+							Usage: "only delete device of user",
+						},
+					},
+					Action: func(c *cli.Context) {
+						list := mongo.FindSites(c.String("name"), c.String("email"))
+						if len(list) == 0 {
+							logrus.Fatalln("sites not found")
+						}
+
+						log.PrintJSON(list)
+
+						pool, _ := tunny.CreatePool(c.Int("pool"), func(i interface{}) interface{} {
+							d := i.(bson.M)
+							id := util.ObjectIdStr(d["_id"])
+							oid := util.ObjectIdStr(d["oid"])
+							logrus.Infoln("Deleting", d["name"], "in", oid)
+							if err := client.DeleteSite(oid, id); err != nil {
+								logrus.Fatalln(err.Error())
+							}
+
+							return nil
+						}).Open()
+						wg := sync.WaitGroup{}
+
+						wg.Add(len(list))
+						for _, d := range list {
+							pool.SendWorkAsync(d, func(i interface{}, e error) {
+								wg.Done()
+							})
+						}
+						wg.Wait()
+					},
+				},
+				{
+					Name:  "find",
+					Usage: "find sites by name",
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:  "serialNumber, s",
+							Usage: "device serial number to delete",
+						},
+						cli.StringFlag{
+							Name:  "email",
+							Usage: "only delete device of user",
+						},
+					},
+					Action: func(c *cli.Context) {
+						d := mongo.FindSites(c.String("name"), c.String("email"))
 						if d == nil {
 							logrus.Fatalln("device not found")
 						}
