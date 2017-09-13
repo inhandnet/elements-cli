@@ -22,7 +22,7 @@ func NewApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "elements util"
 	app.Usage = "elements scripts utility."
-	app.Version = "0.1.2"
+	app.Version = "0.1.3"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "mongo-uri, m",
