@@ -8,18 +8,11 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/urfave/cli"
+	"github.com/inhandnet/elements-cli/mongo"
 )
 
-var sess *mgo.Session
-
 func MigrateDeviceOnlineEvents(c *cli.Context) {
-	var err error
-	sess, err = mgo.Dial(c.String("url"))
-	if err != nil {
-		logrus.Fatalln("Failed to connect to mongodb:", err)
-	}
-
-	iter := sess.DB("ABCDE_db").C("organizations").Find(bson.M{}).Iter()
+	iter := mongo.Session().DB("ABCDE_db").C("organizations").Find(bson.M{}).Iter()
 
 	org := new(Org)
 	for iter.Next(org) {
@@ -47,7 +40,7 @@ func (o *Org) DbName() string {
 }
 
 func migrate(db string, retain bool) {
-	conn := sess.Copy()
+	conn := mongo.Session().Copy()
 	defer conn.Close()
 	coll := conn.DB(db).C("device.online.events")
 
