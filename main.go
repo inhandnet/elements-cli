@@ -74,8 +74,8 @@ func NewApp() *cli.App {
 			Usage: "device management",
 			Subcommands: []cli.Command{
 				{
-					Name:  "delete",
-					Usage: "delete device",
+					Name:   "delete",
+					Usage:  "delete device",
 					Before: device.Prepare,
 					Flags: []cli.Flag{
 						cli.StringFlag{
@@ -88,15 +88,19 @@ func NewApp() *cli.App {
 							Value: 1,
 						},
 						cli.BoolFlag{
-							Name: "delete-site",
+							Name:  "delete-site",
 							Usage: "also delete site",
+						},
+						cli.StringFlag{
+							Name:  "email",
+							Usage: "only delete device of user",
 						},
 					},
 					Action: func(c *cli.Context) {
 						serialNumber := c.String("serialNumber")
 						device.Prepare(c)
 
-						list := device.Find(serialNumber)
+						list := device.Find(serialNumber, c.String("email"))
 						if len(list) == 0 {
 							logrus.Fatalln("device not found")
 						}
@@ -111,6 +115,7 @@ func NewApp() *cli.App {
 							if err := device.Delete(oid, id, c.Bool("delete-site")); err != nil {
 								logrus.Fatalln(err.Error())
 							}
+
 							return nil
 						}).Open()
 						wg := sync.WaitGroup{}
@@ -132,11 +137,15 @@ func NewApp() *cli.App {
 							Name:  "serialNumber, s",
 							Usage: "device serial number to delete",
 						},
+						cli.StringFlag{
+							Name:  "email",
+							Usage: "only delete device of user",
+						},
 					},
 					Action: func(c *cli.Context) {
 						serialNumber := c.String("serialNumber")
 
-						d := device.Find(serialNumber)
+						d := device.Find(serialNumber, c.String("email"))
 						if d == nil {
 							logrus.Fatalln("device not found")
 						}

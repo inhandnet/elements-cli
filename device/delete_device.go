@@ -26,7 +26,7 @@ func Prepare(c *cli.Context) (err error) {
 		logrus.Fatalln("failed to init admin token:", err.Error())
 	}
 
-	time.AfterFunc(30 * time.Minute, func() {
+	time.AfterFunc(30*time.Minute, func() {
 		Prepare(c)
 	})
 	return
@@ -49,14 +49,23 @@ func Delete(oid, id string, deleteSite bool) error {
 	return nil
 }
 
-func Find(serialNumber string) []bson.M {
+func Find(serialNumber, email string) []bson.M {
 	result := make([]bson.M, 100)
 	query := bson.M{}
 	if strings.HasPrefix(serialNumber, "/") && strings.HasSuffix(serialNumber, "/") {
-		query["sn"] = bson.RegEx{Pattern: serialNumber[1 : len(serialNumber)-1]}
+		query["sn"] = bson.RegEx{Pattern: serialNumber[1: len(serialNumber)-1]}
 	} else {
 		query["sn"] = serialNumber
 	}
+
+	if email != "" {
+		if oid, err := mongo.UserOid(email); err != nil {
+			logrus.Fatalln("user not found", email)
+		} else {
+			query["oid"] = oid
+		}
+	}
+
 	mongo.Session().DB("dn_pp").C("ovdp_device").Find(query).All(&result)
 	return result
 }
