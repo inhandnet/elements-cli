@@ -17,6 +17,7 @@ func NewApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "elements util"
 	app.Usage = "elements scripts utility."
+	app.Version = "0.1.1"
 	app.Commands = []cli.Command{
 		{
 			Name:  "fix",
