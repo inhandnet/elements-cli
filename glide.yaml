@@ -2,4 +2,5 @@ package: github.com/inhandnet/elements-cli
 import:
 - package: gopkg.in/mgo.v2
 - package: github.com/Sirupsen/logrus
-  version: v1.0.0
+- package: gopkg.in/resty.v0
+  version: ^0.13.0
