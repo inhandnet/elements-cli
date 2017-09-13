@@ -50,17 +50,17 @@ func NewApp() *cli.App {
 					Usage:  "delete device",
 					Flags:  []cli.Flag{
 						cli.StringFlag{
-							Name:  "url",
+							Name:  "url, h",
 							Value: "http://10.5.16.105",
 							Usage: "api base url",
 						},
 						cli.StringFlag{
-							Name:  "password",
+							Name:  "password, p",
 							Value: "admin",
 							Usage: "admin password",
 						},
 						cli.StringFlag{
-							Name: "serialNumber",
+							Name: "serialNumber, s",
 							Usage: "device serial number to delete",
 						},
 					},
@@ -87,17 +87,17 @@ func NewApp() *cli.App {
 					Usage:  "find device by serial number",
 					Flags:  []cli.Flag{
 						cli.StringFlag{
-							Name:  "url",
+							Name:  "url, h",
 							Value: "http://10.5.16.105",
 							Usage: "api base url",
 						},
 						cli.StringFlag{
-							Name:  "password",
+							Name:  "password, p",
 							Value: "admin",
 							Usage: "admin password",
 						},
 						cli.StringFlag{
-							Name: "serialNumber",
+							Name: "serialNumber, s",
 							Usage: "device serial number to delete",
 						},
 					},
