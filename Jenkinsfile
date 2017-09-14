@@ -9,16 +9,14 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        parallel(
-          "build": {
-            sh 'go build .'
-            
-          },
-          "stage": {
-            archiveArtifacts 'elements-cli'
-            
-          }
-        )
+        sh '''pwd
+ls -al
+go build github.com/inhandnet/elements-cli'''
+      }
+    }
+    stage('stage') {
+      steps {
+        archiveArtifacts 'elements-cli'
       }
     }
   }
