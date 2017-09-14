@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh 'go build github.com/inhandnet/elements-cli
+        sh 'go build github.com/inhandnet/elements-cli'
       }
     }
     stage('stash') {
