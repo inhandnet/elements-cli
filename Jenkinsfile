@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'golang'
-      args '-v .:/go/src/github.com/inhandnet/elements-cli'
+      args '-v $WORKSPACE:/go/src/github.com/inhandnet/elements-cli'
     }
     
   }
