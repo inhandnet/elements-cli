@@ -2,19 +2,17 @@ pipeline {
   agent {
     docker {
       image 'golang'
-      args '-v $WORKSPACE:/go/src/github.com/inhandnet/elements-cli'
+      customWorkspace '/go/src/github.com/inhandnet/elements-cli'
     }
     
   }
   stages {
     stage('build') {
       steps {
-        sh '''pwd
-ls -al
-go build github.com/inhandnet/elements-cli'''
+        sh 'go build github.com/inhandnet/elements-cli
       }
     }
-    stage('stage') {
+    stage('stash') {
       steps {
         archiveArtifacts 'elements-cli'
       }
