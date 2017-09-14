@@ -8,10 +8,10 @@
   version = "v1.0.3"
 
 [[projects]]
-  name = "github.com/astaxie/beego"
-  packages = ["httplib"]
-  revision = "d96289a81bf67728cff7a19b067aaecc65a62ec6"
-  version = "v1.9.0"
+  branch = "master"
+  name = "github.com/jeffail/tunny"
+  packages = ["."]
+  revision = "54ae6b3774037722ea5cc04b6af6e971b6221fbf"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -58,6 +58,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8a8f200d6644ca3094783f7699b24756de7343fed5d56c20a303838ecdeb0371"
+  inputs-digest = "240b57518997b214b281cd8484e0b76b2dd9ea92807ec50da8cd00a4e0481279"
   solver-name = "gps-cdcl"
   solver-version = 1
